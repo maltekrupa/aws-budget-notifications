@@ -21,12 +21,12 @@ def lambda_handler(event, context):
 def getBudget():
     print('Getting budget info')
     res = client.describe_budget(AccountId=accID, BudgetName=budgetName)
-    
+
     #Get budget details
     limit = str(res['Budget']['BudgetLimit']['Amount'])[:7]
     act = str(res['Budget']['CalculatedSpend']['ActualSpend']['Amount'])[:7]
     forecast = str(res['Budget']['CalculatedSpend']['ForecastedSpend']['Amount'])[:7]
-    
+
     #Post billing info to Slack
     #slack("Budget name is %s" % res['Budget']['BudgetName'])
     slack("Billing report! Monthly AWS budget of $" + limit + '.\n\nActual spend so far this month: $' + act + '. Forecast spend for this month: $' + forecast + '.')
@@ -43,5 +43,5 @@ def slack(message):
     except subprocess.CalledProcessError as e:
         raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
         quit('Error posting to slack')
-    
+
     return 'ok'
